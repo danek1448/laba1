@@ -1,0 +1,10 @@
+PIPE
+33
+33
+33
+1
+STATION
+epepe
+1
+0
+0.2
