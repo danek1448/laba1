@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <limits>
+#include <cctype>
 
 using namespace std;
 
@@ -19,6 +20,30 @@ struct Compressor {
     float klass_stancii;
 };
 
+bool Proverka_stroki(const string& s) {
+    for (char c : s) {
+        if (!isalpha(c) && !isspace(c)) {
+            return false;
+        }
+    }
+    return !s.empty();
+}
+
+string Vvod_stroki(const string& prompt) {
+    string input;
+    while (true) {
+        cout << prompt;
+        getline(cin, input);
+
+        if (Proverka_stroki(input)) {
+            return input;
+        }
+        else {
+            cout << "Ошибка! Введите только буквы: ";
+        }
+    }
+}
+
 bool Proverka_bl() {
     int znachenie;
     while (true) {
@@ -29,6 +54,13 @@ bool Proverka_bl() {
             cout << "Ошибка. Введите 0 или 1: ";
         }
         else {
+            char next_char = cin.peek();
+            if (next_char != '\n' && next_char != EOF) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Ошибка! Введите только число (0 или 1): ";
+                continue;
+            }
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return znachenie == 1;
         }
@@ -45,6 +77,13 @@ float Proverka_fl(float min_znach = 0.0f, float max_znach = numeric_limits<float
             cout << "Ошибка. Введите число от " << min_znach << " до " << max_znach << ": ";
         }
         else {
+            char next_char = cin.peek();
+            if (next_char != '\n' && next_char != EOF) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Ошибка! Введите только число: ";
+                continue;
+            }
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return znachenie;
         }
@@ -61,17 +100,23 @@ int Proverka_in(int min_znach = 0, int max_znach = numeric_limits<int>::max()) {
             cout << "Ошибка. Введите число от " << min_znach << " до " << max_znach << ": ";
         }
         else {
+            char next_char = cin.peek();
+            if (next_char != '\n' && next_char != EOF) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Ошибка! Введите только число: ";
+                continue;
+            }
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return znachenie;
         }
     }
 }
 
-
 Truba Vvodtrubi() {
     Truba pipe;
-    cout << "Введите название трубы: ";
-    getline(cin, pipe.name);
+
+    pipe.name = Vvod_stroki("Введите название трубы (только буквы): ");
 
     cout << "Введите длину трубы(км): ";
     pipe.dlina_km = Proverka_fl(0.1f);
@@ -87,8 +132,8 @@ Truba Vvodtrubi() {
 
 Compressor Vvodcomp() {
     Compressor cm;
-    cout << "Введите название КС: ";
-    getline(cin, cm.name);
+
+    cm.name = Vvod_stroki("Введите название КС (только буквы): ");
 
     cout << "Введите общее количество цехов: ";
     cm.kol_cehov = Proverka_in(1);
@@ -222,12 +267,12 @@ void Zagruzit_iz_file(Truba& pipe, Compressor& cm) {
 
     string line;
     while (getline(file, line)) {
-        if (line == "TRUBA") {
+        if (line == "ТРУБА") {
             getline(file, pipe.name);
             file >> pipe.dlina_km >> pipe.diameter_mm >> pipe.remont;
             file.ignore();
         }
-        else if (line == "COMPRESSOR") {
+        else if (line == "КС") {
             getline(file, cm.name);
             file >> cm.kol_cehov >> cm.vrabote >> cm.klass_stancii;
             file.ignore();
