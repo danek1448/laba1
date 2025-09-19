@@ -115,6 +115,56 @@ void Vse_objects(const Truba& pipe, Compressor& cm) {
 	Pokaz_comp(cm);
 }
 
+void Izmenit_status(Truba& pipe) {
+	if (pipe.name.empty()) {
+		cout << "Труба не добавлена!" << endl;
+		return;
+	}
+
+	pipe.remont = !pipe.remont;
+	cout << "Статус трубы изменен на: " << (pipe.remont ? "В ремонте" : "Работает") << endl;
+}
+
+void Zapustit_cehi(Compressor& cm) {
+	if (cm.name.empty()) {
+		cout << "Компрессорная станция не добавлена!" << endl;
+		return;
+	}
+
+	int dostupno = cm.kol_cehov - cm.vrabote;
+	if (dostupno == 0) {
+		cout << "Все цехи уже работают!" << endl;
+		return;
+	}
+
+	cout << "Доступно для запуска: " << dostupno << " цехов" << endl;
+	cout << "Сколько цехов запустить? ";
+
+	int zapuskaem = Proverka_in(1, dostupno);
+	cm.vrabote += zapuskaem;
+
+	cout << "Запущено " << zapuskaem << " цехов. Теперь работает: " << cm.vrabote << " цехов" << endl;
+}
+
+void Ostanovit_cehi(Compressor& cm) {
+	if (cm.name.empty()) {
+		cout << "Компрессорная станция не добавлена!" << endl;
+		return;
+	}
+
+	if (cm.vrabote == 0) {
+		cout << "Нет работающих цехов!" << endl;
+		return;
+	}
+
+	cout << "Работает цехов: " << cm.vrabote << endl;
+	cout << "Сколько цехов остановить? ";
+
+	int ostanavlivaem = Proverka_in(1, cm.vrabote);
+	cm.vrabote -= ostanavlivaem;
+
+	cout << "Остановлено " << ostanavlivaem << " цехов. Теперь работает: " << cm.vrabote << " цехов" << endl;
+}
 
 void menu() {
 	Truba pipe;
@@ -144,6 +194,31 @@ void menu() {
 
 		case 3:
 			Vse_objects(pipe, cm);
+
+		case 4:
+			Izmenit_status(pipe);
+			break;
+
+		case 5:
+		{
+			if (cm.name.empty()) {
+				cout << "Сначала добавьте компрессорную станцию!" << endl;
+				break;
+			}
+
+			cout << "1. Запустить цехи" << endl;
+			cout << "2. Остановить цехи" << endl;
+			cout << "Выберите действие: ";
+
+			int podvibor = Proverka_in(1, 2);
+			if (podvibor == 1) {
+				Zapustit_cehi(cm);
+			}
+			else {
+				Ostanovit_cehi(cm);
+			}
+			break;
+		}
 
 		case 8:
 			cout << "Выход из программы!" << endl;
