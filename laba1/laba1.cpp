@@ -1,11 +1,11 @@
-﻿#include <iostream>
-#include <fstream>
-#include <string>
-#include <limits>
-#include <cctype>
+﻿#include <iostream> // ввод-вывод
+#include <fstream> // работа с файлом
+#include <string> // работа со строками
+#include <limits> // пределы числовых типов
+#include <cctype> // для проверок на буквы и пробелы в строках
 
 using namespace std;
-
+// определение трубы
 struct Truba {
     string name;
     float dlina_km;
@@ -13,6 +13,7 @@ struct Truba {
     bool remont;
 };
 
+// определение компрессорной станцт
 struct Compressor {
     string name;
     int kol_cehov;
@@ -20,6 +21,7 @@ struct Compressor {
     float klass_stancii;
 };
 
+// проверка строки на наличие цифр
 bool Proverka_stroki(const string& s) {
     for (char c : s) {
         if (!isalpha(c) && !isspace(c)) {
@@ -29,6 +31,7 @@ bool Proverka_stroki(const string& s) {
     return !s.empty();
 }
 
+// ввод строки с проверкой
 string Vvod_stroki(const string& prompt) {
     string input;
     while (true) {
@@ -44,6 +47,7 @@ string Vvod_stroki(const string& prompt) {
     }
 }
 
+// проверка булевого значения на ввод только 0 или 1
 bool Proverka_bl() {
     int znachenie;
     while (true) {
@@ -54,6 +58,7 @@ bool Proverka_bl() {
             cout << "Ошибка. Введите 0 или 1: ";
         }
         else {
+            // проверка на наличие лишнего после числа
             char next_char = cin.peek();
             if (next_char != '\n' && next_char != EOF) {
                 cin.clear();
@@ -67,6 +72,7 @@ bool Proverka_bl() {
     }
 }
 
+// проверка флота от 0 до максимума через limits
 float Proverka_fl(float min_znach = 0.0f, float max_znach = numeric_limits<float>::max()) {
     float znachenie;
     while (true) {
@@ -77,6 +83,7 @@ float Proverka_fl(float min_znach = 0.0f, float max_znach = numeric_limits<float
             cout << "Ошибка. Введите число от " << min_znach << " до " << max_znach << ": ";
         }
         else {
+            // проверка на наличие лишнего после числа
             char next_char = cin.peek();
             if (next_char != '\n' && next_char != EOF) {
                 cin.clear();
@@ -90,6 +97,7 @@ float Proverka_fl(float min_znach = 0.0f, float max_znach = numeric_limits<float
     }
 }
 
+// проверка инта от 0 до максимума через limits
 int Proverka_in(int min_znach = 0, int max_znach = numeric_limits<int>::max()) {
     int znachenie;
     while (true) {
@@ -100,6 +108,7 @@ int Proverka_in(int min_znach = 0, int max_znach = numeric_limits<int>::max()) {
             cout << "Ошибка. Введите число от " << min_znach << " до " << max_znach << ": ";
         }
         else {
+            // проверка на наличие лишнего после числа
             char next_char = cin.peek();
             if (next_char != '\n' && next_char != EOF) {
                 cin.clear();
@@ -113,6 +122,7 @@ int Proverka_in(int min_znach = 0, int max_znach = numeric_limits<int>::max()) {
     }
 }
 
+// ввод данных о трубе
 Truba Vvodtrubi() {
     Truba pipe;
 
@@ -130,6 +140,7 @@ Truba Vvodtrubi() {
     return pipe;
 }
 
+// ввод данных о кс
 Compressor Vvodcomp() {
     Compressor cm;
 
@@ -147,6 +158,7 @@ Compressor Vvodcomp() {
     return cm;
 }
 
+// показ данных трубы
 void Pokaz_trubi(const Truba& pipe) {
     if (pipe.name.empty()) {
         cout << "Труба не добавлена" << endl;
@@ -161,6 +173,7 @@ void Pokaz_trubi(const Truba& pipe) {
     cout << endl;
 }
 
+// показ данных кс
 void Pokaz_comp(const Compressor& cm) {
     if (cm.name.empty()) {
         cout << "Компрессорная станция не добавлена" << endl;
@@ -175,11 +188,13 @@ void Pokaz_comp(const Compressor& cm) {
     cout << endl;
 }
 
+// вывод всех введенных объектов
 void Vse_objects(const Truba& pipe, const Compressor& cm) {
     Pokaz_trubi(pipe);
     Pokaz_comp(cm);
 }
 
+// статус ремонта трубы
 void Izmenit_status(Truba& pipe) {
     if (pipe.name.empty()) {
         cout << "Труба не добавлена!" << endl;
@@ -192,6 +207,7 @@ void Izmenit_status(Truba& pipe) {
     cout << "Статус трубы изменен на: " << (pipe.remont ? "В ремонте" : "Работает") << endl;
 }
 
+// запуск цехов с проверкой количества
 void Zapustit_cehi(Compressor& cm) {
     if (cm.name.empty()) {
         cout << "Компрессорная станция не добавлена!" << endl;
@@ -213,6 +229,7 @@ void Zapustit_cehi(Compressor& cm) {
     cout << "Запущено " << zapuskaem << " цехов. Теперь работает: " << cm.vrabote << " цехов" << endl;
 }
 
+// остановка цехов с проверкой на количество
 void Ostanovit_cehi(Compressor& cm) {
     if (cm.name.empty()) {
         cout << "Компрессорная станция не добавлена!" << endl;
@@ -233,6 +250,7 @@ void Ostanovit_cehi(Compressor& cm) {
     cout << "Остановлено " << ostanavlivaem << " цехов. Теперь работает: " << cm.vrabote << " цехов" << endl;
 }
 
+// сохранение в файл
 void Sohranit_v_file(const Truba& pipe, const Compressor& cm) {
     ofstream file("labor1.txt");
 
@@ -257,6 +275,7 @@ void Sohranit_v_file(const Truba& pipe, const Compressor& cm) {
     cout << "Данные успешно сохранены в файл!" << endl;
 }
 
+// чтение из файла
 void Zagruzit_iz_file(Truba& pipe, Compressor& cm) {
     ifstream file("labor1.txt");
 
@@ -283,6 +302,7 @@ void Zagruzit_iz_file(Truba& pipe, Compressor& cm) {
     cout << "Данные успешно загружены из файла!" << endl;
 }
 
+// меню консоли
 void menu() {
     Truba pipe = { "", 0.0f, 0, false };
     Compressor cm = { "", 0, 0, 0.0f };
@@ -357,6 +377,7 @@ void menu() {
     }
 }
 
+// пуск
 int main() {
     setlocale(LC_ALL, "RU");
     menu();
