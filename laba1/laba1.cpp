@@ -123,8 +123,7 @@ int Proverka_in(int min_znach = 0, int max_znach = numeric_limits<int>::max()) {
 }
 
 // ввод данных о трубе
-Truba Vvodtrubi() {
-    Truba pipe;
+void Vvodtrubi(Truba& pipe) {
 
     pipe.name = Vvod_stroki("Введите название трубы (только буквы): ");
 
@@ -137,12 +136,10 @@ Truba Vvodtrubi() {
     cout << "Введите статус трубы (0 - работает, 1 - в ремонте): ";
     pipe.remont = Proverka_bl();
 
-    return pipe;
 }
 
 // ввод данных о кс
-Compressor Vvodcomp() {
-    Compressor cm;
+void Vvodcomp(Compressor& cm) {
 
     cm.name = Vvod_stroki("Введите название КС (только буквы): ");
 
@@ -155,7 +152,6 @@ Compressor Vvodcomp() {
     cout << "Введите класс станции (0.0-5.0): ";
     cm.klass_stancii = Proverka_fl(0.0f, 5.0f);
 
-    return cm;
 }
 
 // показ данных трубы
@@ -324,12 +320,12 @@ void menu() {
 
         switch (vibor) {
         case 1:
-            pipe = Vvodtrubi();
+            Vvodtrubi(pipe);
             cout << "Труба успешно добавлена!" << endl;
             break;
 
         case 2:
-            cm = Vvodcomp();
+            Vvodcomp(cm);
             cout << "Компрессорная станция успешно добавлена!" << endl;
             break;
 
